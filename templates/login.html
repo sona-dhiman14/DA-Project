@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | GenAI Insights</title>
+
+    <style>
+        :root {
+            --bg: #07111f;
+            --panel: #0d1b2d;
+            --panel-light: #12243a;
+            --blue: #3984ff;
+            --cyan: #35d5e8;
+            --text: #f4f7ff;
+            --muted: #a8b6cb;
+            --border: rgba(160, 190, 230, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(ellipse at 15% 20%,
+                    rgba(57,132,255,0.13), transparent 40%),
+                radial-gradient(ellipse at 90% 85%,
+                    rgba(53,213,232,0.08), transparent 35%),
+                var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1180px, 92%);
+            margin: auto;
+        }
+
+        /* NAVBAR - SAME AS HOME PAGE */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(7,17,31,0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-inner {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .brand img {
+            width: 47px;
+            height: 47px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+
+        .brand-name span {
+            color: var(--cyan);
+        }
+
+        .brand small {
+            display: block;
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 21px;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.25s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--cyan);
+        }
+
+        .nav-links .nav-button {
+            padding: 9px 15px;
+            border: 1px solid var(--blue);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .nav-links .nav-primary {
+            background: var(--blue);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+        }
+
+        .nav-links .nav-primary:hover {
+            background: #2569db;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-size: 25px;
+            padding: 3px 11px;
+            cursor: pointer;
+        }
+
+        /* LOGIN MAIN */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 65px 4%;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            overflow: hidden;
+            background: var(--panel);
+            box-shadow: 0 25px 75px rgba(0,0,0,0.25);
+        }
+
+        /* LEFT PANEL */
+        .welcome-panel {
+            position: relative;
+            overflow: hidden;
+            padding: 55px 42px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 90% 10%,
+                    rgba(53,213,232,0.12), transparent 35%),
+                linear-gradient(145deg, #10243a, #0a1728);
+        }
+
+        .welcome-panel::before {
+            content: "";
+            position: absolute;
+            width: 270px;
+            height: 270px;
+            right: -140px;
+            bottom: -110px;
+            border: 1px solid rgba(53,213,232,0.18);
+            border-radius: 50%;
+        }
+
+        .welcome-panel::after {
+            content: "";
+            position: absolute;
+            width: 210px;
+            height: 210px;
+            right: -110px;
+            bottom: -80px;
+            border: 1px solid rgba(57,132,255,0.2);
+            border-radius: 50%;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            color: var(--cyan);
+            background: rgba(53,213,232,0.08);
+            border: 1px solid rgba(53,213,232,0.25);
+            padding: 7px 13px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+        }
+
+        .welcome-panel h1 {
+            font-size: clamp(32px, 4vw, 46px);
+            line-height: 1.18;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-panel h1 span {
+            color: var(--cyan);
+        }
+
+        .welcome-description {
+            max-width: 400px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 18px;
+            margin-top: 35px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            background: rgba(57,132,255,0.13);
+            border: 1px solid rgba(57,132,255,0.2);
+            color: var(--cyan);
+            border-radius: 11px;
+            font-size: 19px;
+        }
+
+        .feature h3 {
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .feature p {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* RIGHT LOGIN FORM */
+        .form-panel {
+            padding: 48px 42px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header .subtitle {
+            color: var(--cyan);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .form-header h2 {
+            font-size: 31px;
+            margin-bottom: 9px;
+        }
+
+        .form-header p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* FLASH MESSAGES */
+        .messages {
+            margin-bottom: 18px;
+        }
+
+        .message {
+            padding: 11px 13px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            background: rgba(255,80,80,0.09);
+            border: 1px solid rgba(255,80,80,0.25);
+            color: #ffb3b3;
+        }
+
+        .message.success {
+            background: rgba(53,213,160,0.08);
+            border-color: rgba(53,213,160,0.25);
+            color: #81e8bd;
+        }
+
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 9px;
+            color: #e4ebf7;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 14px 15px;
+            color: var(--text);
+            background: #081523;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+            transition: 0.25s;
+        }
+
+        .input-wrap input::placeholder {
+            color: #71839b;
+        }
+
+        .input-wrap input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(57,132,255,0.12);
+        }
+
+        .password-input {
+            padding-right: 65px !important;
+        }
+
+        .show-password {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--cyan);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 2px 0 25px;
+            font-size: 12px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .remember input {
+            accent-color: var(--blue);
+        }
+
+        .forgot-link {
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: var(--blue);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .submit-btn:hover {
+            background: #2569db;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(57,132,255,0.2);
+        }
+
+        .register-text {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .register-text a {
+            color: var(--cyan);
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+
+        .secure-note {
+            text-align: center;
+            margin-top: 27px;
+            color: #71839b;
+            font-size: 10px;
+        }
+
+        .secure-note span {
+            color: var(--cyan);
+            margin-right: 5px;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 23px 0;
+            background: rgba(5,14,25,0.6);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-inner p,
+        .footer-links a {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyan);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1050px) {
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-inner {
+                position: relative;
+                flex-wrap: wrap;
+                padding: 12px 0;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                padding: 12px 0;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 12px;
+                font-size: 14px;
+                border-radius: 7px;
+            }
+
+            .nav-links a:hover {
+                background: var(--panel);
+            }
+
+            .login-wrapper {
+                max-width: 580px;
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-panel {
+                padding: 38px 35px;
+            }
+
+            .welcome-panel h1 {
+                font-size: 36px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr 1fr;
+                gap: 18px 12px;
+            }
+
+            .form-panel {
+                padding: 40px 35px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .brand-name {
+                font-size: 16px;
+            }
+
+            .brand img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .nav-inner {
+                gap: 12px;
+            }
+
+            main {
+                padding: 30px 4%;
+            }
+
+            .welcome-panel {
+                padding: 32px 24px;
+            }
+
+            .welcome-panel h1 {
+                font-size: 30px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+
+            .form-panel {
+                padding: 32px 24px;
+            }
+
+            .form-header h2 {
+                font-size: 27px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="container nav-inner">
+
+            <a href="{{ url_for('home') }}" class="brand">
+                <img
+                    src="{{ url_for('static', filename='logo.png') }}"
+                    alt="GenAI Insights Logo"
+                    onerror="this.style.display='none'"
+                >
+
+                <div class="brand-name">
+                    GenAI <span>Insights</span>
+                    <small>DATA ANALYTICS</small>
+                </div>
+            </a>
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                type="button"
+                aria-label="Toggle navigation"
+                aria-expanded="false"
+                aria-controls="navLinks">
+                ☰
+            </button>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+
+                <a href="{{ url_for('login') }}" class="active">
+                    Login
+                </a>
+
+                <a href="{{ url_for('register') }}" class="nav-primary">
+                    Register
+                </a>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <!-- LOGIN SECTION -->
+    <main>
+        <div class="container login-wrapper">
+
+            <!-- LEFT INFORMATION PANEL -->
+            <section class="welcome-panel">
+                <div class="welcome-content">
+
+                    <span class="eyebrow">
+                        ENTERPRISE GENAI ANALYTICS
+                    </span>
+
+                    <h1>
+                        Understand AI.<br>
+                        <span>Empower People.</span>
+                    </h1>
+
+                    <p class="welcome-description">
+                        Welcome to GenAI Insights — your analytics platform
+                        for exploring Generative AI adoption, workforce
+                        impact and reported productivity changes across
+                        industries and countries.
+                    </p>
+
+                    <div class="feature-list">
+
+                        <div class="feature">
+                            <div class="feature-icon">✧</div>
+                            <div>
+                                <h3>GenAI Tool Analysis</h3>
+                                <p>Compare tools and adoption patterns.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature">
+                            <div class="feature-icon">♙</div>
+                            <div>
+                                <h3>Workforce Impact</h3>
+                                <p>Explore employee impact and new roles.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature">
+                            <div class="feature-icon">↗</div>
+                            <div>
+                                <h3>Productivity Insights</h3>
+                                <p>Investigate productivity patterns.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- RIGHT LOGIN FORM -->
+            <section class="form-panel">
+
+                <div class="form-header">
+                    <p class="subtitle">ACCOUNT ACCESS</p>
+                    <h2>Welcome Back!</h2>
+                    <p>
+                        Sign in to access your GenAI analytics workspace.
+                    </p>
+                </div>
+
+                <!-- Flask flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="messages">
+                            {% for category, message in messages %}
+                                <div class="message {% if category == 'success' %}success{% endif %}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('login') }}" method="POST">
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+
+                        <div class="input-wrap">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+
+                        <div class="input-wrap">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="password-input"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="show-password"
+                                aria-label="Show password">
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="options">
+                        <label class="remember">
+                            <input type="checkbox" name="remember">
+                            <span>Remember me</span>
+                        </label>
+
+                        <a href="#" class="forgot-link" id="forgotLink">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        Sign in to Dashboard &rarr;
+                    </button>
+
+                </form>
+
+                <div class="register-text">
+                    Don't have an account?
+                    <a href="{{ url_for('register') }}">Create Account</a>
+                </div>
+
+                <div class="secure-note">
+                    <span>●</span>
+                    GenAI Insights | Data Analytics Platform
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-inner">
+
+            <p>
+                &copy; 2026 GenAI Insights. Data Analytics Project.
+            </p>
+
+            <div class="footer-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <script>
+        // Mobile navigation
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        menuToggle.addEventListener("click", function () {
+            navLinks.classList.toggle("show");
+
+            const expanded = navLinks.classList.contains("show");
+            menuToggle.setAttribute("aria-expanded", expanded);
+        });
+
+        navLinks.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navLinks.classList.remove("show");
+                menuToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        // Show / hide password
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        togglePassword.addEventListener("click", function () {
+            const hidden = passwordInput.type === "password";
+
+            passwordInput.type = hidden ? "text" : "password";
+            togglePassword.textContent = hidden ? "Hide" : "Show";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                hidden ? "Hide password" : "Show password"
+            );
+        });
+
+        // Forgot password placeholder
+        document.getElementById("forgotLink").addEventListener("click", function (event) {
+            event.preventDefault();
+
+            alert(
+                "Password reset is not configured yet. " +
+                "Please contact the project administrator."
+            );
+        });
+    </script>
+
+</body>
+</html>
+```

@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI Insights | Data Analytics</title>
+
+    <style>
+        :root {
+            --bg: #07111f;
+            --panel: #0d1b2d;
+            --panel-light: #12243a;
+            --blue: #3984ff;
+            --cyan: #35d5e8;
+            --text: #f4f7ff;
+            --muted: #a8b6cb;
+            --border: rgba(160, 190, 230, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1180px, 92%);
+            margin: auto;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(7, 17, 31, 0.96);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-inner {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .brand img {
+            width: 47px;
+            height: 47px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+
+        .brand-name span {
+            color: var(--cyan);
+        }
+
+        .brand small {
+            display: block;
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 21px;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.25s;
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+        }
+
+        .nav-links .nav-button {
+            padding: 9px 15px;
+            border: 1px solid var(--blue);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .nav-links .nav-primary {
+            background: var(--blue);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+        }
+
+        .nav-links .nav-primary:hover {
+            background: #2569db;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-size: 25px;
+            padding: 3px 11px;
+            cursor: pointer;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 88px 0 70px;
+            background:
+                radial-gradient(ellipse at 80% 25%, rgba(57, 132, 255, 0.17), transparent 42%),
+                radial-gradient(ellipse at 10% 90%, rgba(53, 213, 232, 0.09), transparent 35%);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            gap: 55px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            color: var(--cyan);
+            background: rgba(53, 213, 232, 0.08);
+            border: 1px solid rgba(53, 213, 232, 0.25);
+            padding: 7px 13px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: clamp(37px, 5vw, 61px);
+            line-height: 1.13;
+            letter-spacing: -1.5px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 span {
+            color: var(--cyan);
+        }
+
+        .hero p {
+            max-width: 590px;
+            color: var(--muted);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 21px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.25s;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2569db;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border);
+            color: white;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        /* HERO VISUAL */
+        .visual-card {
+            padding: 25px;
+            border-radius: 22px;
+            background: linear-gradient(145deg, #11253e, #0b1728);
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+        }
+
+        .visual-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 26px;
+        }
+
+        .visual-header h3 {
+            font-size: 16px;
+        }
+
+        .live-label {
+            font-size: 10px;
+            color: var(--cyan);
+            border: 1px solid rgba(53, 213, 232, 0.25);
+            padding: 5px 8px;
+            border-radius: 20px;
+        }
+
+        .visual-kpis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .visual-kpi {
+            padding: 17px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid var(--border);
+        }
+
+        .visual-kpi span {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .visual-kpi strong {
+            display: block;
+            font-size: 27px;
+            margin-top: 5px;
+        }
+
+        .visual-kpi small {
+            color: var(--cyan);
+            font-size: 11px;
+        }
+
+        .chart-title {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 15px;
+        }
+
+        .mini-chart {
+            height: 145px;
+            display: flex;
+            align-items: end;
+            gap: 13px;
+            padding: 10px 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mini-bar {
+            flex: 1;
+            min-width: 0;
+            border-radius: 6px 6px 0 0;
+            background: linear-gradient(180deg, var(--cyan), var(--blue));
+            opacity: 0.85;
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-around;
+            gap: 5px;
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 9px;
+        }
+
+        /* STATS */
+        .stats {
+            padding: 0 0 55px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 24px 20px;
+            border-radius: 14px;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 30px;
+            color: var(--cyan);
+            margin-bottom: 4px;
+        }
+
+        .stat-card span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* COMMON SECTIONS */
+        section.content-section {
+            padding: 76px 0;
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 42px;
+        }
+
+        .section-heading .eyebrow {
+            margin-bottom: 13px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(27px, 4vw, 38px);
+            line-height: 1.25;
+            margin-bottom: 13px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ABOUT */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 45px;
+            align-items: center;
+        }
+
+        .about-copy h2 {
+            font-size: 34px;
+            line-height: 1.25;
+            margin-bottom: 18px;
+        }
+
+        .about-copy h2 span {
+            color: var(--cyan);
+        }
+
+        .about-copy p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 13px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 17px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .feature-icon {
+            width: 39px;
+            height: 39px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            background: rgba(57, 132, 255, 0.14);
+            color: var(--cyan);
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        .feature h3 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .feature p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* ANALYTICS CARDS */
+        .analytics-section {
+            background: #091625;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .analytics-card {
+            padding: 25px;
+            border-radius: 15px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            transition: 0.25s;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(53, 213, 232, 0.5);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1c4c91, #123047);
+            color: var(--cyan);
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .analytics-card h3 {
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .analytics-card p {
+            color: var(--muted);
+            font-size: 13px;
+            min-height: 63px;
+            margin-bottom: 18px;
+        }
+
+        .card-link {
+            color: var(--cyan);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .card-link span {
+            margin-left: 5px;
+        }
+
+        /* OBJECTIVES */
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .objective {
+            padding: 24px;
+            border-left: 3px solid var(--blue);
+            background: var(--panel);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .objective h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .objective p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* TECH STACK */
+        .tech-section {
+            background: #091625;
+            border-top: 1px solid var(--border);
+        }
+
+        .tech-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .tech-item {
+            min-width: 125px;
+            text-align: center;
+            padding: 17px 22px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .tech-item strong {
+            display: block;
+            font-size: 15px;
+            color: var(--cyan);
+        }
+
+        .tech-item span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* CTA */
+        .cta {
+            margin: 70px auto;
+            padding: 47px 25px;
+            text-align: center;
+            border-radius: 20px;
+            background: linear-gradient(120deg, #123b70, #102a45 70%, #103a48);
+            border: 1px solid var(--border);
+        }
+
+        .cta h2 {
+            font-size: clamp(25px, 4vw, 36px);
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            color: #c0d0e5;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 25px 0;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-inner p,
+        .footer-links a {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyan);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1050px) {
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .hero-grid {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-inner {
+                position: relative;
+                flex-wrap: wrap;
+                padding: 12px 0;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                padding: 15px 0 8px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 12px;
+                font-size: 14px;
+                border-radius: 7px;
+            }
+
+            .nav-links a:hover {
+                background: var(--panel);
+            }
+
+            .hero-grid,
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 60px;
+            }
+
+            .visual-card {
+                max-width: 600px;
+                width: 100%;
+                margin: auto;
+            }
+
+            .analytics-grid,
+            .objectives-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 520px) {
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .brand img {
+                width: 39px;
+                height: 39px;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .analytics-grid,
+            .objectives-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 17px 13px;
+            }
+
+            .stat-card strong {
+                font-size: 25px;
+            }
+
+            section.content-section {
+                padding: 55px 0;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="container nav-inner">
+
+            <a href="{{ url_for('home') }}" class="brand">
+                <img src="{{ url_for('static', filename='logo.png') }}"
+                    alt="GenAI Insights Logo">
+
+                <div class="brand-name">
+                    GENAI <span>INSIGHTS</span>
+                    <small>DATA ANALYTICS</small>
+                </div>
+            </a>
+
+            <button class="menu-toggle"
+                    id="menuToggle"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false"
+                    type="button">
+                ☰
+            </button>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+             
+
+                {% if session.get('user_id') %}
+                    
+                    <a href="{{ url_for('logout') }}" class="nav-primary">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-button">Login</a>
+                    <a href="{{ url_for('register') }}" class="nav-primary">Register</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </header>
+    <!-- NAVBAR END -->
+
+    
+
+    
+         
+
+        
+
+
+    <!-- HERO -->
+    <main>
+        <section class="hero">
+            <div class="container hero-grid">
+
+                <div class="hero-content">
+                    <span class="eyebrow">
+                        GENERATIVE AI • DATA • WORKFORCE
+                    </span>
+
+                    <h1>
+                        Understand the Impact of
+                        <span>Generative AI</span>
+                    </h1>
+
+                    <p>
+                        Explore how Generative AI tools are transforming
+                        industries, influencing employee productivity,
+                        impacting the workforce and creating new roles
+                        across the world.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="{{ url_for('Executive_overview') }}"
+                           class="btn btn-primary">
+                            Explore Dashboard &rarr;
+                        </a>
+
+                        <a href="#about" class="btn btn-outline">
+                            Discover the Project
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Illustrative preview, not a live chart -->
+                <div class="visual-card">
+                    <div class="visual-header">
+                        <h3>GenAI Impact Overview</h3>
+                        <span class="live-label">PROJECT PREVIEW</span>
+                    </div>
+
+                    <div class="visual-kpis">
+                        <div class="visual-kpi">
+                            <span>Dataset Records</span>
+                            <strong>100K</strong>
+                            <small>Dataset size</small>
+                        </div>
+
+                        <div class="visual-kpi">
+                            <span>GenAI Tools</span>
+                            <strong>06</strong>
+                            <small>Tools covered</small>
+                        </div>
+
+                        <div class="visual-kpi">
+                            <span>Industries</span>
+                            <strong>14</strong>
+                            <small>Industry groups</small>
+                        </div>
+
+                        <div class="visual-kpi">
+                            <span>Countries</span>
+                            <strong>14</strong>
+                            <small>Global coverage</small>
+                        </div>
+                    </div>
+
+                    <p class="chart-title">
+                        Illustrative adoption trend
+                    </p>
+
+                    <div class="mini-chart" aria-label="Decorative bar chart">
+                        <div class="mini-bar" style="height: 38%"></div>
+                        <div class="mini-bar" style="height: 55%"></div>
+                        <div class="mini-bar" style="height: 46%"></div>
+                        <div class="mini-bar" style="height: 73%"></div>
+                        <div class="mini-bar" style="height: 62%"></div>
+                        <div class="mini-bar" style="height: 88%"></div>
+                        <div class="mini-bar" style="height: 77%"></div>
+                        <div class="mini-bar" style="height: 96%"></div>
+                    </div>
+
+                    <div class="chart-labels">
+                        <span>Stage 1</span>
+                        <span>Stage 2</span>
+                        <span>Stage 3</span>
+                        <span>Stage 4</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- DATASET STATS -->
+        <section class="stats">
+            <div class="container stats-grid">
+
+                <div class="stat-card">
+                    <strong>100,000</strong>
+                    <span>Dataset Records</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong>6</strong>
+                    <span>Generative AI Tools</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong>14</strong>
+                    <span>Industries Covered</span>
+                </div>
+
+                <div class="stat-card">
+                    <strong>14</strong>
+                    <span>Countries Covered</span>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ABOUT -->
+        <section class="content-section" id="about">
+            <div class="container about-grid">
+
+                <div class="about-copy">
+                    <span class="eyebrow">ABOUT THE PROJECT</span>
+
+                    <h2>
+                        Turning GenAI Data Into
+                        <span>Meaningful Insights</span>
+                    </h2>
+
+                    <p>
+                        GenAI Insights is a data analytics project focused
+                        on understanding Generative AI adoption and its
+                        reported workforce and productivity outcomes.
+                    </p>
+
+                    <p>
+                        The project examines adoption patterns across
+                        industries, countries and AI tools. Interactive
+                        visualizations help users explore the dataset and
+                        compare different aspects of AI adoption.
+                    </p>
+
+                    <p>
+                        Results describe patterns in the available dataset
+                        and should not automatically be interpreted as
+                        proof that AI caused a particular outcome.
+                    </p>
+
+                    <a href="{{ url_for('about') }}"
+                       class="btn btn-outline">
+                        Learn More
+                    </a>
+                </div>
+
+                <div class="feature-list">
+
+                    <div class="feature">
+                        <div class="feature-icon">⌕</div>
+                        <div>
+                            <h3>Data-Driven Exploration</h3>
+                            <p>Explore patterns and comparisons using the available dataset.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">▥</div>
+                        <div>
+                            <h3>Interactive Visualizations</h3>
+                            <p>Understand data through interactive Plotly charts and graphs.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">◎</div>
+                        <div>
+                            <h3>Workforce & Productivity</h3>
+                            <p>Examine employee impact, new roles and reported productivity changes.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">⌖</div>
+                        <div>
+                            <h3>Global & Industry Analysis</h3>
+                            <p>Compare reported outcomes across countries and industries.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ANALYTICS MODULES -->
+        <section class="content-section analytics-section" id="analytics">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="eyebrow">EXPLORE THE DASHBOARDS</span>
+                    <h2>Analytics Modules</h2>
+                    <p>
+                        Choose an analysis module to explore different
+                        dimensions of Generative AI adoption and impact.
+                    </p>
+                </div>
+
+                <div class="analytics-grid">
+
+                    <article class="analytics-card">
+                        <div class="card-icon">▦</div>
+                        <h3>Executive Overview</h3>
+                        <p>
+                            Get a high-level view of workforce impact,
+                            adoption trends and new roles across industries.
+                        </p>
+                        <a class="card-link"
+                           href="{{ url_for('Executive_overview') }}">
+                            Explore Overview <span>&rarr;</span>
+                        </a>
+                    </article>
+
+                    <article class="analytics-card">
+                        <div class="card-icon">✧</div>
+                        <h3>GenAI Tool Analysis</h3>
+                        <p>
+                            Compare tool adoption, employees impacted,
+                            training hours and average productivity changes.
+                        </p>
+                        <a class="card-link"
+                           href="{{ url_for('GenAI_analysis') }}">
+                            Explore Tools <span>&rarr;</span>
+                        </a>
+                    </article>
+
+                    <article class="analytics-card">
+                        <div class="card-icon">♙</div>
+                        <h3>Workforce Impact</h3>
+                        <p>
+                            Examine employees impacted, new roles created
+                            and training patterns across industries.
+                        </p>
+                        <a class="card-link"
+                           href="{{ url_for('workforce_impact_analysis') }}">
+                            Explore Workforce <span>&rarr;</span>
+                        </a>
+                    </article>
+
+                    <article class="analytics-card">
+                        <div class="card-icon">↗</div>
+                        <h3>Productivity Analysis</h3>
+                        <p>
+                            Investigate productivity trends, industry
+                            differences and training-hour distributions.
+                        </p>
+                        <a class="card-link"
+                           href="{{ url_for('productivity_analysis') }}">
+                            Explore Productivity <span>&rarr;</span>
+                        </a>
+                    </article>
+
+                    <article class="analytics-card">
+                        <div class="card-icon">◎</div>
+                        <h3>Global & Industry Analysis</h3>
+                        <p>
+                            Compare countries, industries and GenAI tool
+                            distribution using interactive visualizations.
+                        </p>
+                        <a class="card-link"
+                           href="{{ url_for('global_analysis') }}">
+                            Explore Global Data <span>&rarr;</span>
+                        </a>
+                    </article>
+
+                    <article class="analytics-card">
+                        <div class="card-icon">ⓘ</div>
+                        <h3>Project Methodology</h3>
+                        <p>
+                            Learn about the project background, dataset,
+                            objectives and analytical approach.
+                        </p>
+                        <a class="card-link"
+                           href="{{ url_for('about') }}">
+                            About the Project <span>&rarr;</span>
+                        </a>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- PROJECT OBJECTIVES -->
+        <section class="content-section" id="objectives">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="eyebrow">OUR FOCUS</span>
+                    <h2>Project Objectives</h2>
+                    <p>
+                        Key questions this analytics project helps explore.
+                    </p>
+                </div>
+
+                <div class="objectives-grid">
+
+                    <div class="objective">
+                        <h3>01. Adoption Patterns</h3>
+                        <p>
+                            Compare the recorded use of different GenAI
+                            tools across years and industries.
+                        </p>
+                    </div>
+
+                    <div class="objective">
+                        <h3>02. Workforce Changes</h3>
+                        <p>
+                            Explore reported employee impact and new
+                            roles across different sectors.
+                        </p>
+                    </div>
+
+                    <div class="objective">
+                        <h3>03. Productivity & Training</h3>
+                        <p>
+                            Examine recorded productivity changes and
+                            training-hour patterns in the dataset.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- TECHNOLOGY STACK -->
+        <section class="content-section tech-section" id="technology">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="eyebrow">BUILT WITH</span>
+                    <h2>Technology Stack</h2>
+                    <p>
+                        Technologies used to develop the data analytics
+                        and web application.
+                    </p>
+                </div>
+
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <strong>Python</strong>
+                        <span>Programming</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <strong>Pandas</strong>
+                        <span>Data Analysis</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <strong>Plotly</strong>
+                        <span>Visualization</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <strong>Flask</strong>
+                        <span>Web Framework</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <strong>HTML & CSS</strong>
+                        <span>Web Design</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <strong>SQL</strong>
+                        <span>Database Concepts</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- CALL TO ACTION -->
+        <section class="container">
+            <div class="cta">
+                <h2>Ready to Explore the Data?</h2>
+                <p>
+                    Visit the interactive analytics modules to explore
+                    the patterns available in the dataset.
+                </p>
+
+                <a href="{{ url_for('Executive_overview') }}"
+                   class="btn btn-primary">
+                    Open Executive Overview &rarr;
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-inner">
+
+            <p>
+                &copy; 2026 GenAI Insights. Data Analytics Project.
+            </p>
+
+            <div class="footer-links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('Executive_overview') }}">Overview</a>
+                <a href="{{ url_for('GenAI_analysis') }}">GenAI Tools</a>
+                <a href="{{ url_for('global_analysis') }}">Global Analysis</a>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        menuToggle.addEventListener("click", function () {
+            navLinks.classList.toggle("show");
+
+            const isExpanded = navLinks.classList.contains("show");
+            menuToggle.setAttribute("aria-expanded", isExpanded);
+        });
+
+        // Close the mobile menu after selecting a link.
+        navLinks.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navLinks.classList.remove("show");
+                menuToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+    </script>
+
+</body>
+</html>

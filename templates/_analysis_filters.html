@@ -1,0 +1,50 @@
+<section class="filter-panel" aria-labelledby="filter-heading">
+    <div class="filter-heading">
+        <h2 id="filter-heading">Filter analysis</h2>
+        <p>Selections update the KPI cards and charts below.</p>
+    </div>
+    <form method="get" action="{{ request.path }}">
+        <div class="filter-controls">
+            <div class="filter-field">
+                <label for="filter-country">Country</label>
+                <select id="filter-country" name="country">
+                    <option value="">All countries</option>
+                    {% for value in analysis_filter_options.country %}
+                    <option value="{{ value }}" {% if active_filters.country == value %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-field">
+                <label for="filter-industry">Industry</label>
+                <select id="filter-industry" name="industry">
+                    <option value="">All industries</option>
+                    {% for value in analysis_filter_options.industry %}
+                    <option value="{{ value }}" {% if active_filters.industry == value %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-field">
+                <label for="filter-tool">GenAI tool</label>
+                <select id="filter-tool" name="tool">
+                    <option value="">All tools</option>
+                    {% for value in analysis_filter_options.tool %}
+                    <option value="{{ value }}" {% if active_filters.tool == value %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-field">
+                <label for="filter-year">Adoption year</label>
+                <select id="filter-year" name="year">
+                    <option value="">All years</option>
+                    {% for value in analysis_filter_options.year %}
+                    <option value="{{ value }}" {% if active_filters.year == value %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button class="filter-submit" type="submit">Apply filters</button>
+                <a class="filter-clear" href="{{ url_for(request.endpoint) }}">Clear</a>
+            </div>
+        </div>
+    </form>
+</section>

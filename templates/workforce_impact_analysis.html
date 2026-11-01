@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Workforce Impact | GenAI Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='analysis-filters.css') }}">
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #17243a;
+            --muted: #718096;
+            --line: #e8edf4;
+            --surface: #ffffff;
+            --canvas: #f5f7fb;
+            --navy: #172b4d;
+            --blue: #3977d5;
+            --blue-soft: #edf4ff;
+            --sidebar-width: 254px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--canvas);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 5;
+            display: flex;
+            width: var(--sidebar-width);
+            flex-direction: column;
+            padding: 27px 18px 20px;
+            color: #e8effb;
+            background: var(--navy);
+        }
+
+        .brand { display: flex; align-items: center; gap: 12px; padding: 2px 10px 30px; }
+        .brand-mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; color: #fff; background: #3977d5; font-size: 16px; font-weight: 800; }
+        .brand-name { font-size: 14px; font-weight: 700; letter-spacing: .01em; }
+        .brand-caption { margin-top: 3px; color: #9dafc9; font-size: 11px; }
+        .nav-label { margin: 0 10px 10px; color: #91a3bf; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+        .nav-list { display: grid; gap: 5px; }
+
+        .nav-link {
+            display: flex;
+            min-height: 43px;
+            align-items: center;
+            gap: 12px;
+            padding: 0 11px;
+            border-radius: 9px;
+            color: #c4d0e2;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color .15s ease, background .15s ease;
+        }
+
+        .nav-link:hover { color: #fff; background: rgba(255,255,255,.08); }
+        .nav-link.active { color: #fff; background: #28436a; font-weight: 650; }
+        .nav-icon { width: 19px; color: #a8bad3; font-size: 16px; text-align: center; }
+        .nav-link.active .nav-icon { color: #8db8ff; }
+        .sidebar-bottom { margin-top: auto; }
+        .sidebar-divider { height: 1px; margin: 14px 8px; background: rgba(255,255,255,.12); }
+        .logout-link { color: #d3dbea; }
+        .logout-link:hover { color: #fff; background: rgba(255,255,255,.08); }
+
+        .main { min-height: 100vh; margin-left: var(--sidebar-width); padding: 34px clamp(22px, 4vw, 58px) 48px; }
+        .content { width: min(1320px, 100%); margin: 0 auto; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 31px; }
+        .eyebrow { margin-bottom: 8px; color: var(--blue); font-size: 11px; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
+        h1 { margin: 0; font-size: clamp(25px, 3vw, 34px); letter-spacing: -.045em; }
+        .subtitle { margin: 9px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+        .updated-badge {
+            flex: 0 0 auto;
+            padding: 9px 12px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            color: #63738a;
+            background: var(--surface);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 0 0 14px; }
+        .section-heading h2 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+        .section-note { color: var(--muted); font-size: 12px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 31px; }
+
+        .kpi-card {
+            min-width: 0;
+            padding: 19px 20px;
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            background: var(--surface);
+            box-shadow: 0 2px 8px rgba(24, 39, 65, .025);
+        }
+
+        .kpi-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .kpi-label { color: #65748b; font-size: 12px; font-weight: 600; }
+        .kpi-icon { display: grid; width: 33px; height: 33px; place-items: center; border-radius: 10px; color: var(--blue); background: var(--blue-soft); font-size: 15px; font-weight: 700; }
+        .kpi-value { margin-top: 15px; color: var(--ink); font-size: clamp(23px, 2.6vw, 30px); font-weight: 750; letter-spacing: -.045em; line-height: 1.1; }
+        .kpi-value.name { overflow: hidden; font-size: clamp(19px, 2vw, 26px); text-overflow: ellipsis; white-space: nowrap; }
+        .kpi-footnote { margin-top: 7px; color: #8793a5; font-size: 11px; }
+        .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+
+        .chart-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            background: var(--surface);
+            box-shadow: 0 2px 8px rgba(24, 39, 65, .025);
+        }
+
+        .chart-card.wide { grid-column: 1 / -1; }
+        .chart-copy { padding: 19px 21px 0; }
+        .chart-copy h3 { margin: 0; font-size: 14px; font-weight: 700; }
+        .chart-copy p { max-width: 720px; margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+        .chart { min-height: 330px; padding: 0 8px 4px; }
+        .chart-card.wide .chart { min-height: 350px; }
+        .chart > div { width: 100% !important; }
+
+        @media (max-width: 1050px) {
+            :root { --sidebar-width: 220px; }
+            .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 760px) {
+            .sidebar { position: sticky; inset: 0 0 auto; width: 100%; height: auto; padding: 12px 14px; }
+            .brand { padding: 0 4px 12px; }
+            .nav-label { display: none; }
+            .nav-list { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px; }
+            .nav-link { min-height: 37px; flex: 0 0 auto; padding: 0 10px; font-size: 12px; }
+            .nav-icon { display: none; }
+            .sidebar-bottom { margin-top: 5px; }
+            .sidebar-divider { display: none; }
+            .main { margin-left: 0; padding: 25px 17px 35px; }
+            .topbar { align-items: flex-start; margin-bottom: 24px; }
+            .updated-badge { display: none; }
+            .chart-grid { grid-template-columns: minmax(0, 1fr); }
+            .chart-card.wide { grid-column: auto; }
+            .chart { min-height: 300px; }
+        }
+
+        @media (max-width: 430px) {
+            .kpi-grid { gap: 10px; }
+            .kpi-card { padding: 15px; }
+            .kpi-label { font-size: 11px; }
+            .kpi-footnote { font-size: 10px; }
+            .section-note { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <a class="brand" href="{{ url_for('home') }}" aria-label="GenAI Insights home">
+            <span class="brand-mark">G</span>
+            <span>
+                <span class="brand-name">GenAI Insights</span>
+                <span class="brand-caption">Enterprise analytics</span>
+            </span>
+        </a>
+
+        <p class="nav-label">Workspace</p>
+        <nav class="nav-list" aria-label="Main navigation">
+            <a class="nav-link" href="{{ url_for('home') }}"><span class="nav-icon">⌂</span>Home</a>
+            <a class="nav-link" href="{{ url_for('Executive_overview') }}"><span class="nav-icon">▦</span>Executive Overview</a>
+            <a class="nav-link" href="{{ url_for('GenAI_analysis') }}"><span class="nav-icon">✳</span>GenAI Analysis</a>
+            <a class="nav-link active" href="{{ url_for('workforce_impact_analysis') }}" aria-current="page"><span class="nav-icon">◉</span>Workforce Impact</a>
+            <a class="nav-link" href="{{ url_for('productivity_analysis') }}"><span class="nav-icon">↗</span>Productivity</a>
+            <a class="nav-link" href="{{ url_for('global_analysis') }}"><span class="nav-icon">◎</span>Global Analysis</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-divider"></div>
+            <a class="nav-link logout-link" href="{{ url_for('logout') }}"><span class="nav-icon">↪</span>Log out</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="content">
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">People and transformation</div>
+                    <h1>Workforce impact</h1>
+                    <p class="subtitle">Understand how GenAI adoption relates to workforce reach, new roles, and employee training across industries.</p>
+                </div>
+                <div class="updated-badge">Enterprise GenAI adoption dataset</div>
+            </header>
+
+            {% include '_analysis_filters.html' %}
+
+            <section aria-labelledby="kpi-heading">
+                <div class="section-heading">
+                    <h2 id="kpi-heading">Key performance indicators</h2>
+                    <span class="section-note">A snapshot of workforce outcomes</span>
+                </div>
+                <div class="kpi-grid">
+                    <article class="kpi-card">
+                        <div class="kpi-top"><span class="kpi-label">Workforce records</span><span class="kpi-icon">▤</span></div>
+                        <div class="kpi-value">{{ workforce_records }}</div>
+                        <div class="kpi-footnote">Organization-level records analyzed</div>
+                    </article>
+                    <article class="kpi-card">
+                        <div class="kpi-top"><span class="kpi-label">Employees impacted</span><span class="kpi-icon">◉</span></div>
+                        <div class="kpi-value">{{ employees_impacted }}</div>
+                        <div class="kpi-footnote">Combined reported workforce impact</div>
+                    </article>
+                    <article class="kpi-card">
+                        <div class="kpi-top"><span class="kpi-label">New roles created</span><span class="kpi-icon">＋</span></div>
+                        <div class="kpi-value">{{ new_roles }}</div>
+                        <div class="kpi-footnote">Combined reported roles across organizations</div>
+                    </article>
+                    <article class="kpi-card">
+                        <div class="kpi-top"><span class="kpi-label">Leading impact industry</span><span class="kpi-icon">▥</span></div>
+                        <div class="kpi-value name">{{ leading_industry }}</div>
+                        <div class="kpi-footnote">Highest total employees impacted</div>
+                    </article>
+                </div>
+            </section>
+
+            <section aria-labelledby="charts-heading">
+                <div class="section-heading">
+                    <h2 id="charts-heading">Workforce and role outcomes</h2>
+                    <span class="section-note">Compare industry impact, role creation, and training</span>
+                </div>
+                <div class="chart-grid">
+                    <article class="chart-card">
+                        <div class="chart-copy">
+                            <h3>Employees impacted by industry</h3>
+                            <p>Compare total reported employee impact across industries to see where GenAI adoption has the widest workforce reach.</p>
+                        </div>
+                        <div class="chart">{{ graph1_html|safe }}</div>
+                    </article>
+                    <article class="chart-card">
+                        <div class="chart-copy">
+                            <h3>New roles created by industry</h3>
+                            <p>See how reported new role creation varies by industry and where workforce expansion is most pronounced.</p>
+                        </div>
+                        <div class="chart">{{ graph2_html|safe }}</div>
+                    </article>
+                    <article class="chart-card wide">
+                        <div class="chart-copy">
+                            <h3>Employees impacted versus new roles</h3>
+                            <p>Compare industry-level workforce reach with new roles created; each point represents an industry.</p>
+                        </div>
+                        <div class="chart">{{ graph3_html|safe }}</div>
+                    </article>
+                    <article class="chart-card wide">
+                        <div class="chart-copy">
+                            <h3>Industry workforce impact overview</h3>
+                            <p>Explore how total employee impact and new roles vary together by industry; color indicates average productivity change.</p>
+                        </div>
+                        <div class="chart">{{ graph4_html|safe }}</div>
+                    </article>
+                    <article class="chart-card">
+                        <div class="chart-copy">
+                            <h3>Average training hours by industry</h3>
+                            <p>Compare average training hours across industries to understand differences in reported employee enablement.</p>
+                        </div>
+                        <div class="chart">{{ graph5_html|safe }}</div>
+                    </article>
+                    <article class="chart-card">
+                        <div class="chart-copy">
+                            <h3>Training hours versus new roles</h3>
+                            <p>Explore the relationship between average training and new roles created across industries.</p>
+                        </div>
+                        <div class="chart">{{ graph6_html|safe }}</div>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

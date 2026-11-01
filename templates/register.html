@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | GenAI Insights</title>
+
+    <style>
+        :root {
+            --bg: #07111f;
+            --panel: #0d1b2d;
+            --panel-light: #12243a;
+            --blue: #3984ff;
+            --cyan: #35d5e8;
+            --text: #f4f7ff;
+            --muted: #a8b6cb;
+            --border: rgba(160, 190, 230, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Navbar */
+        nav {
+            min-height: 75px;
+            padding: 15px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(7, 17, 31, 0.96);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            width: 43px;
+            height: 43px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 27px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+        }
+
+        .nav-links .nav-btn {
+            background: var(--blue);
+            color: white;
+            padding: 11px 19px;
+            border-radius: 8px;
+        }
+
+        /* Main layout */
+        .container {
+            max-width: 1100px;
+            min-height: calc(100vh - 145px);
+            margin: auto;
+            padding: 55px 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 65px;
+        }
+
+        .welcome h1 {
+            font-size: clamp(32px, 4vw, 46px);
+            line-height: 1.2;
+            margin: 20px 0;
+        }
+
+        .welcome h1 span {
+            color: var(--cyan);
+        }
+
+        .welcome p {
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 15px;
+            max-width: 440px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            color: var(--cyan);
+            background: rgba(53, 213, 232, 0.06);
+            font-size: 12px;
+        }
+
+        .features {
+            margin-top: 30px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .feature-icon {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: var(--panel-light);
+            color: var(--cyan);
+            font-size: 18px;
+        }
+
+        /* Register form */
+        .register-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .register-card h2 {
+            font-size: 27px;
+            margin-bottom: 9px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 9px;
+            color: #dce6f5;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #081525;
+            color: var(--text);
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(57, 132, 255, 0.1);
+        }
+
+        input::placeholder {
+            color: #71839c;
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 65px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--cyan);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        .terms input {
+            width: 15px;
+            height: 15px;
+            margin-top: 2px;
+            accent-color: var(--blue);
+            flex-shrink: 0;
+        }
+
+        .terms a {
+            color: var(--cyan);
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, var(--blue), #2768dc);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(57, 132, 255, 0.2);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 23px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .login-link a {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .flash {
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .flash.success {
+            background: rgba(46, 204, 113, 0.12);
+            color: #72e5a1;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .flash.error {
+            background: rgba(255, 90, 90, 0.1);
+            color: #ff9999;
+            border: 1px solid rgba(255, 90, 90, 0.25);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #71839c;
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 800px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 35px;
+                max-width: 550px;
+                padding-top: 35px;
+            }
+
+            .welcome {
+                text-align: center;
+            }
+
+            .welcome p {
+                margin: auto;
+            }
+
+            .features {
+                text-align: left;
+                max-width: 350px;
+                margin: 25px auto 0;
+            }
+        }
+
+        @media (max-width: 520px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            .logo-text {
+                font-size: 15px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                font-size: 12px;
+            }
+
+            .nav-links .nav-btn {
+                padding: 9px 11px;
+            }
+
+            .register-card {
+                padding: 24px 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}"
+                 alt="GenAI Insights Logo">
+
+            <div class="logo-text">
+                GenAI INSIGHTS
+                <span>DATA ANALYTICS</span>
+            </div>
+        </a>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}" class="nav-btn">Register</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <section class="welcome">
+            <span class="tag">CREATE YOUR ACCOUNT</span>
+
+            <h1>
+                Start Your Journey with
+                <span>GenAI Insights</span>
+            </h1>
+
+            <p>
+                Create your account to explore Generative AI adoption,
+                workforce impact, productivity trends and industry insights
+                through interactive data visualizations.
+            </p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <span>Explore interactive analytics dashboards</span>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <span>Discover GenAI tools and adoption trends</span>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <span>Understand global and industry insights</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="register-card">
+            <h2>Create Account</h2>
+            <p class="subtitle">
+                Fill in your details to get started.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('register') }}" method="POST"
+                  id="registerForm">
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrap">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            minlength="8"
+                            required
+                        >
+                        <button type="button"
+                                class="toggle-password"
+                                onclick="togglePassword('password', this)">
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="password-wrap">
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Enter password again"
+                            autocomplete="new-password"
+                            minlength="8"
+                            required
+                        >
+                        <button type="button"
+                                class="toggle-password"
+                                onclick="togglePassword('confirm_password', this)">
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+                <label class="terms">
+                    <input type="checkbox" id="terms" required>
+                    <span>
+                        I confirm that the information provided is correct
+                        and I agree to the website's
+                        <a href="{{ url_for('about') }}">usage information</a>.
+                    </span>
+                </label>
+
+                <button type="submit" class="register-btn">
+                    Create Account →
+                </button>
+
+            </form>
+
+            <div class="login-link">
+                Already have an account?
+                <a href="{{ url_for('login') }}">Login here</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        © 2026 GenAI Insights | Data Analytics Dashboard
+    </footer>
+
+    <script>
+        function togglePassword(id, button) {
+            const field = document.getElementById(id);
+
+            if (field.type === "password") {
+                field.type = "text";
+                button.textContent = "Hide";
+            } else {
+                field.type = "password";
+                button.textContent = "Show";
+            }
+        }
+
+        document.getElementById("registerForm").addEventListener(
+            "submit", function(event) {
+                const password = document.getElementById("password").value;
+                const confirmPassword =
+                    document.getElementById("confirm_password").value;
+
+                if (password !== confirmPassword) {
+                    event.preventDefault();
+                    alert("Passwords do not match. Please try again.");
+                }
+            }
+        );
+    </script>
+
+</body>
+</html>
+```
